@@ -18,7 +18,7 @@
             </a-button>
             <a-drawer
               :title="drawerTitle"
-              width="750px"
+              width="1000px"
               placement="left"
               :closable="true"
               :visible="graphVisible"
@@ -107,17 +107,19 @@
       },
 
       async showG(id) {
+        this.graphVisible = true;
         this.g6Spinning = true;
         this.graphData = await this.getCarGraph(id);
-        this.graphVisible = true;
         this.g6Spinning = false;
         let _this=this;
+        let _seriesId = _this.car.seriesId;
+        console.log(_seriesId);
         let data = {
           userid: this.userId,
           carid: _this.car.seriesId,
           behaviorType: 0,
         };
-        this.sendUserBehaviorInfo(data);
+        // this.sendUserBehaviorInfo(data);
 
       },
       onCloseGraph() {

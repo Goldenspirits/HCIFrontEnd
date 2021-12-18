@@ -19,13 +19,13 @@
               </a-button>
               <a-drawer
                 :title="drawerTitle"
-                width="750px"
+                width="1000px"
                 placement="left"
                 :closable="true"
                 :visible="graphVisible"
                 @close="onCloseGraph"
               >
-                <KG_Q style="margin: auto;background-color: #edeef2" :graphData="graphData"></KG_Q>
+                  <KG_Q style="margin: auto;" :graphData="graphData"></KG_Q>
               </a-drawer>
             </div>
           </div>
