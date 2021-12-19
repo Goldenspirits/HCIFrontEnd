@@ -77,6 +77,9 @@ const user = {
       const res = await registerAPI(data)
       if (res) {
         message.success('注册成功')
+      }else {
+        message.error("账号已存在");
+        console.log("账号已存在");
       }
     },
     getUserInfo({state, commit}) {

@@ -1,61 +1,41 @@
 <template>
   <div id="rootOfPortrait">
-    <a-row>
-      <a-col class="block1 " :span="8" style="z-index: 2;padding: .7em">
-        <div style="background-color: rgba(245, 248, 252, 0.9);width: 33vw">
-          <h3 style="padding: 10px 0 8px 15px;
+    <div class="MyContainer">
+      <div style="background-color: rgba(245, 248, 252, 0.9); width: 33vw">
+        <h3 style="padding: 10px 0 8px 15px;
           box-shadow: 0 2px 8px rgba(216, 212, 226, 0.6);
           background-color: white">我的收藏夹</h3>
-          <div style="text-align: center;
+        <div style="text-align: center;
           padding: 0 6px 6px 6px;
           overflow: scroll;
           height: 83.1vh">
-            <a-list item-layout="horizontal" :data-source="bookList">
-              <a-skeleton class="loadStyle" active :loading="fetchingBookList" v-if="fetchingBookList"/>
-              <a-list-item slot="renderItem" slot-scope="item, index" id="bookItem">
-                <a slot="actions"
-                   style="color: #a51f1f;margin-right: 2em"
-                   @click="cancelBooking(item.carSeriesEntity.seriesId)"
-                ><a-icon type="star" style="color: #a51f1f;"/>
-                  取消收藏</a>
+          <a-list item-layout="horizontal" :data-source="bookList">
+            <a-skeleton class="loadStyle" active :loading="fetchingBookList" v-if="fetchingBookList"/>
+            <a-list-item slot="renderItem" slot-scope="item, index" id="bookItem">
+              <a slot="actions"
+                 style="color: #a51f1f;margin-right: 2em"
+                 @click="cancelBooking(item.carSeriesEntity.seriesId)"
+              ><a-icon type="star" style="color: #a51f1f;"/>
+                取消收藏</a>
 
-                <a-list-item-meta
-                  :description="item.carSeriesEntity.officialPrice"
-                >
-                  <p slot="title">{{ item.carSeriesEntity.name }}</p>
-                  <a-avatar
-                    style="width: 3.5em;height: 3.5em;margin: .5em .5em 0 1.5em"
-                    slot="avatar"
-                    :src="item.carSeriesEntity.coverImg"
-                  />
-                </a-list-item-meta>
-              </a-list-item>
-            </a-list>
-          </div>
+              <a-list-item-meta
+                :description="item.carSeriesEntity.officialPrice"
+              >
+                <p slot="title">{{ item.carSeriesEntity.name }}</p>
+                <a-avatar
+                  style="width: 3.5em;height: 3.5em;margin: .5em .5em 0 1.5em"
+                  slot="avatar"
+                  :src="item.carSeriesEntity.coverImg"
+                />
+              </a-list-item-meta>
+            </a-list-item>
+          </a-list>
         </div>
-      </a-col>
-      <a-col class="block1" :span="16" style="z-index: 2;padding: .7em">
-        <KG></KG>
-      </a-col>
-    </a-row>
-    <a-row>
-      <a-col class="block2" :span="8" style="z-index: 2;padding: .7em">
+      </div>
 
-      </a-col>
-      <a-col class="block2" :span="16" style="z-index: 2; padding: 0.7em 0.4em 0.7em 1.1em">
-<!--        <div class="words">-->
-<!--          Proudly-->
-<!--        </div>-->
-<!--        <div class="words">-->
-<!--          Presented by-->
-<!--        </div>-->
-<!--        <div class="words">-->
-<!--          Dune.-->
-<!--        </div>-->
-        <MyWordCloud style="background-color: rgba(245, 248, 252, 0.9);height: 38vh">
-        </MyWordCloud>
-      </a-col>
-    </a-row>
+      <MyWordCloud style="background-color: rgba(245, 248, 252, 0.9);margin-left: 4vw;width: 60vw;height:  83.1vh">
+      </MyWordCloud>
+    </div>
 
   </div>
 </template>
@@ -136,14 +116,17 @@ export default {
   background-position: 0 0;
   background-size: 100% 100%;
 }
-
+.MyContainer{
+  display: flex;
+  align-items: center;
+}
 .block1 {
   height: 52vh;
   /*box-shadow: 0 0px 4px rgba(0,0,0, 0.8);*/
 }
 
 .block2 {
-  height: 38vh;
+  height: 83.1vh;
   /*box-shadow: 0 0px 4px rgba(0,0,0, 0.8);*/
 }
 

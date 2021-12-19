@@ -3,6 +3,10 @@ import {
   getRecommendCarListByUserIdAPI,
   getHotCarListImplAPI
 } from '@/api/recommend'
+import {
+  getSellerListAPI,
+  getSeriesCarListAPI
+} from '@/api/select'
 import {message} from "ant-design-vue";
 
 
@@ -40,6 +44,26 @@ const recommend = {
         return res;
       } else {
         console.log("获得热门车失败")
+      }
+    },
+    getSeriesCarListImpl:async ({state, commit}, data) => {
+      let res = await getSeriesCarListAPI(data);
+      if (res) {
+        console.log("请求成功 getSeriesCarListImpl");
+        console.log(res)
+        return res;
+      } else {
+        console.log("获得失败 getSeriesCarListImpl")
+      }
+    },
+    getSellerListImpl:async ({state, commit}, data) => {
+      let res = await getSellerListAPI(data);
+      if (res) {
+        console.log("请求成功 getSellerListImpl");
+        console.log(res)
+        return res;
+      } else {
+        console.log("获得失败 getSellerListImpl")
       }
     },
   }

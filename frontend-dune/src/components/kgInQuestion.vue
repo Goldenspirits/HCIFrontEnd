@@ -2,8 +2,64 @@
   <div>
     <a-row>
       <a-col :span="12">
+        <div class="inquiryContainer">
+          <div class="quiryBar" style="width: 100%;height: 250px">
+            <div class="carbar" style="width: 100%;height: 100px">
+
+                <div class="carImgContainer" style="width: 35%;height: 80px">
+                  <img class="carImg" :src="imgAddress" >
+                </div>
+                <div class="carType"  style="width: 60%;height: 80px">
+                  <div class="carSeries" style="width: 90%;font-size: 24px;font-weight: 300;color: #1A1A1A" >
+                    {{carSeries}}
+                  </div>
+                  <a-select dropdownMatchSelectWidth="true"  default-value="lucy" style="width: 90%;margin-top: 10px" @change="handleChange">
+                    <a-select-option v-for="carid in carTypeIds" :key="carid" :value="carid">
+                      {{ carid }}
+                    </a-select-option>
+                  </a-select>
+                </div>
+
+            </div>
+            <div  style="width: 100%;height: 40px">
+                <label style="width:35%;margin-left: 20%">选择城市</label>
+                <a-select dropdownMatchSelectWidth="true"  default-value="lucy" style="width: 54%;float: right;margin-right: 6%" @change="handleChange">
+                  <a-select-option v-for="carid in carTypeIds" :key="carid" :value="carid">
+                    {{ carid }}
+                  </a-select-option>
+                </a-select>
+            </div>
+            <div  style="width: 100%;height: 40px">
+              <label style="width:35%;margin-left: 20%">手机号码</label>
+              <a-input style="width: 54%;float: right;margin-right: 6%" placeholder="输入11位手机号" />
+            </div>
+            <a-button  style="margin-top: 10px;width: 74%;height: 40px;background-color: #ffe100;border-color: #ffe100;color: #1a1a1a;border-radius: 5px;margin-left: 20%" type="primary">询底价</a-button>
+          </div>
+          <div class="ShopListHeader">
+            <div style="display: flex;justify-content: space-around;width: 180px">
+              <div style="width: 60px; font-size: 14px;color: #1A1A1A">经销商</div>
+              <div style="width: 90px;font-size: 14px;color:#A2A4AB" >选择经销商</div>
+            </div>
+            <div style="width: 80px;margin-right: 20px;font-size: 14px;color:#FCA91F">智能推荐</div>
+          </div>
+          <a-divider class="mydivi" style="margin:12px 0;min-width: 95%;width: 95%"></a-divider>
+          <div class="ShopList">
+<!--            @click="goQuestionPage(item.question)"-->
+            <div class="shopCard" v-for="item in shopList"
+                 :key="item.id" >
+              <p class="shopName">{{item.name}}<span class="salePlace">{{item.saleplace}}</span></p>
+              <p class="priceC">经销商报价: <span class="price">{{item.price}}</span></p>
+              <p class="shopPlaceC">{{item.place}}</p>
+              <p class="shopPhoneC">经销商电话: <span class="shopPhone">{{item.phoneNum}}</span></p>
+              <a-divider style="margin:12px 0;min-width: 90%;width: 90%"></a-divider>
+            </div>
+          </div>
+        </div>
         <a-button type="primary" @click="changePos">
           按钮
+        </a-button>
+        <a-button type="primary" @click="centPost">
+          测试函数
         </a-button>
       </a-col>
       <a-col :span="12">
@@ -28,11 +84,7 @@
           </div>
         </a-row>
         <a-row>
-          <a-card :title="details[currentPos].dealer_name" class="desc-card">
-            <p>
-              <a-icon type="home" />
-              {{ details[currentPos].dealer_full_name }}
-            </p>
+          <a-card :title="details[currentPos].dealer_full_name" class="desc-card" bodyStyle="margin:12px 24px;padding:0;">
             <p>
               <a-icon type="environment" />
               {{ details[currentPos].address }}
@@ -58,6 +110,8 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
   name: "kgInQuestion",
   props: {
@@ -71,6 +125,10 @@ export default {
       lat: 31.931,
       loaded: false,
       zoom: 16,
+      imgAddress:"http://p1-dcd.byteimg.com/img/motor-img/83746b2d09028177794c863d079fe229~tplv-resize:960:0.jpg",
+      carTypeIds:["车型0001","车型0002","车型0003","车型0004"],
+      shopList:[{}],
+      carSeries:"奥迪A4L",
       markers: [
         {
           position: [118.854, 31.931],
@@ -121,10 +179,18 @@ export default {
     this.center = [this.details[this.currentPos].longi, this.details[this.currentPos].lati]
   },
   methods: {
+    ...mapActions([
+      'getSeriesCarListImpl',
+      'getSellerListImpl',
+    ]),
     changePos() {
       this.currentPos = (this.currentPos + 1) % this.details.length;
       this.center = [this.details[this.currentPos].longi, this.details[this.currentPos].lati]
       console.log(this.center);
+    },
+    async centPost(){
+      let res= await this.getSeriesCarListImpl(1014);
+      console.log(res);
     }
   },
 }
@@ -133,13 +199,16 @@ export default {
 <style scoped>
 .amap-demo {
   width: 100%;
-  height: 350px;
+  height: 550px;
 }
-
+.amap-page-container{
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2)
+}
 .desc-card {
   width: 100%;
   /*height: 250px;*/
   margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2)
 }
 
 .dealer-price {
@@ -147,4 +216,22 @@ export default {
   font-size: 18px;
   font-weight: 500;
 }
+.carbar{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+}
+
+.ShopListHeader {
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+}
+.carImg{
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+}
+
 </style>

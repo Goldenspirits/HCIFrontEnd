@@ -84,7 +84,7 @@
       };
     },
     async mounted() {
-      this.drawerTitle = "Graph View of " + this.car.name;
+      this.drawerTitle = "询底价: " + this.car.name;
       if (this.userId === -1) await this.getUserInfo();
       this.echartsInit();
     },
@@ -107,6 +107,15 @@
           behaviorType: behaviortype,
         };
         this.sendUserBehaviorInfo(data);
+        if(behaviortype===1){
+          this.$message.info(
+            { content: "喜欢成功", duration: 2, icon: <a-icon type="heart" theme="twoTone" two-tone-color="#e23b45"/>}
+          );
+        }else if(behaviortype===2){
+          this.$message.info(
+            { content: "收藏成功", duration: 2, icon: <a-icon type="star" theme="twoTone" two-tone-color="#f9cf60" />}
+          );
+        }
       },
 
       async showG(id) {
@@ -126,8 +135,8 @@
         this.graphVisible = false
       },
       echartsInit: function () {
-        console.log("开始渲染echarts")
-        console.log(this.showed);
+        // console.log("开始渲染echarts")
+        // console.log(this.showed);
         let roseCharts = document.getElementById(this.car.seriesId + '');
         let myChart = this.$echarts.init(roseCharts);
         myChart.setOption({

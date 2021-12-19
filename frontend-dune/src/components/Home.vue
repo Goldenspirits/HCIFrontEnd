@@ -6,7 +6,7 @@
         One More Question.
       </div>
       <div class="searchContainer">
-        <input class="searchStyle"  placeholder="Ask a question"  v-model="question"  @keyup.enter="onSearch" />
+        <input class="searchStyle"  placeholder="您的问题"  v-model="question"  @keyup.enter="onSearch" />
       </div>
     </div>
   </div>

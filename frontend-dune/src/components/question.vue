@@ -10,19 +10,19 @@
           :timestamp="item.timestamp"
           :displayedTime="item.displayedTime"
           :from="item.from"
-          :userName="item.name"
+          :userName="name"
         ></chat-item>
         <a-spin :spinning="spinning">
         </a-spin>
       </div>
       <a-input-search id="sender"
-                      placeholder="Ask anything..."
+                      placeholder="能不能推荐一下纯电动车？"
                       size="default"
                       @search="asking"
                       v-model="content"
                       style="margin: 1em;width: 92%;">
         <a-button style="border-top-right-radius: 15px; border-bottom-right-radius: 15px;"
-                  slot="enterButton" type="primary">Send
+                  slot="enterButton" type="primary">发送
         </a-button>
       </a-input-search>
     </div>
@@ -45,7 +45,7 @@
 
     data() {
       return {
-        name: "USER",
+        name: "",
         spinning: false,
         carList: [],
         lastTime: {},
@@ -80,6 +80,7 @@
       let box = document.getElementsByClassName('scroll-wrapper')[0];
       box.scrollTop = box.scrollHeight;
       this.lastTime = this.chatMessages[this.chatMessages.length - 1].timestamp;
+      this.name = this.userInfo.username;
     },
 
     updated() {
@@ -102,6 +103,17 @@
           this.chatMessages.push({
             type: 1,
             message: e,
+            key: this.chatMessages.length,
+            from: 1,
+            timestamp: new Date(),
+            displayedTime: time,
+            name: this.name
+          });
+        }else {
+          this.lastTime = new Date();
+          this.chatMessages.push({
+            type: 1,
+            message: "能不能推荐一下纯电动车？",
             key: this.chatMessages.length,
             from: 1,
             timestamp: new Date(),

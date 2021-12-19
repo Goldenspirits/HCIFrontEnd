@@ -2,8 +2,8 @@
   <div id="recommendroot">
     <div class="card-wrapper">
       <div class="headerbar">
-        <a-button type="link" @click="refreshRecommend()">推荐</a-button>
-        <a-button type="link" @click="showHotCars()">热门</a-button>
+        <a-button type="link" :style="{'color':recommendTitleFontc}" @click="refreshRecommend()">推荐</a-button>
+        <a-button type="link" :style="{'color': hotCarFontc}" @click="showHotCars()">热门</a-button>
       </div>
       <a-divider class="mydivider"></a-divider>
 
@@ -60,55 +60,7 @@
   </div>
 
 </template>
-<!--    {
-        "id": 9405,
-        "name": "奥迪A5",
-        "electricType": "-",
-        "batteryChargeTime": "-",
-        "isNewEnergyType": "False",
-        "engineDescription": "204-252马力",
-        "environmentalStandards": "国VI",
-        "maxHorsepower": "252",
-        "brandName": "奥迪",
-        "maxSpeed": "250km/h",
-        "accelerationTime": "6.2-7.9s",
-        "officialPrice": "37.18-55.18万",
-        "seriesDisplacement": "2.0T",
-        "carType": "中型车",
-        "rechargeMileage": "-",
-        "fuelForm": "汽油",
-        "fuelLabel": "95#",
-        "seatMaterial": "真皮",
-        "electricDriveNumber": "-",
-        "gearboxDescription": "7挡双离合",
-        "fuelComprehensive": "-",
-        "seriesId": 1455,
-        "coverImg": "http://p9-dcd.byteimg.com/img/motor-img/59b5dc5beac30be00f59f916aa598dae~tplv-resize:960:0.jpg"
-      },{
-        "id": 9406,
-        "name": "奥迪A5",
-        "electricType": "-",
-        "batteryChargeTime": "-",
-        "isNewEnergyType": "False",
-        "engineDescription": "204-252马力",
-        "environmentalStandards": "国VI",
-        "maxHorsepower": "252",
-        "brandName": "奥迪",
-        "maxSpeed": "250km/h",
-        "accelerationTime": "6.2-7.9s",
-        "officialPrice": "37.18-55.18万",
-        "seriesDisplacement": "2.0T",
-        "carType": "中型车",
-        "rechargeMileage": "-",
-        "fuelForm": "汽油",
-        "fuelLabel": "95#",
-        "seatMaterial": "真皮",
-        "electricDriveNumber": "-",
-        "gearboxDescription": "7挡双离合",
-        "fuelComprehensive": "-",
-        "seriesId": 1455,
-        "coverImg": "http://p9-dcd.byteimg.com/img/motor-img/59b5dc5beac30be00f59f916aa598dae~tplv-resize:960:0.jpg"
-      }-->
+
 <script>
 
   import infiniteScroll from 'vue-infinite-scroll';
@@ -133,6 +85,8 @@
         hotPage: 1,
         pageSize: 20,
         isHot: false,
+        recommendTitleFontc:"#0066FF",
+        hotCarFontc:"#4D4D3C",
       }
     },
     async mounted() {
@@ -169,6 +123,10 @@
 
       },
       async refreshRecommend() {
+        let tmpColor=this.recommendTitleFontc;
+        this.recommendTitleFontc=this.hotCarFontc;
+        this.hotCarFontc=tmpColor;
+
         console.log("刷新推荐信息");
         this.isHot = false;
         this.carList = [];
@@ -186,6 +144,10 @@
         this.loading = false;
       },
       async getHotCarList() {
+        let tmpColor=this.recommendTitleFontc;
+        this.recommendTitleFontc=this.hotCarFontc;
+        this.hotCarFontc=tmpColor;
+
         let _this = this;
         let data = {
           page: _this.hotPage,
@@ -245,7 +207,7 @@
     background: white;
     display: flex;
     width: 100%;
-    height: 70px;
+    height: 8vh;
     justify-content: left;
     align-items: center;
   }
@@ -265,7 +227,7 @@
 
 
   .hotQuestion {
-    height: 620px;
+    height: 88vh;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.9);
     padding: 16px;

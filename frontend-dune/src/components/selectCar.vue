@@ -151,6 +151,11 @@
       async handleInfiniteOnLoad() {
         this.page++;
         this.data.page = this.page;
+        if(this.page>=3){
+          console.log("执行了")
+          console.log(this.page);
+          this.closed=true;
+        }
         this.showed = this.showed.concat(await this.changeSelection(this.data));
       },
 

@@ -18,5 +18,17 @@ export function getCarGraphAPI(id) {
     method: 'get',
   })
 }
-
+export function getSeriesCarListAPI(id) {
+  return axios({
+    url: `${api.selectPre}/series/seller/${id}/carInfos`,
+    method: 'get',
+  })
+}
+export function getSellerListAPI(data) {
+  return axios({
+    url: `${api.selectPre}/series/seller/details`,
+    method: 'post',
+    data
+  })
+}
 

@@ -16,7 +16,7 @@
             <span>主页</span>
           </a-menu-item>
           <a-menu-item class="menu-top-item" key="/recommend">
-            <a-icon type="search" />
+            <a-icon type="appstore" />
             <span>推荐</span>
           </a-menu-item>
           <a-menu-item class="menu-top-item" key="/selectCar">
