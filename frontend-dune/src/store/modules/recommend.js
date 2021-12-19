@@ -5,7 +5,8 @@ import {
 } from '@/api/recommend'
 import {
   getSellerListAPI,
-  getSeriesCarListAPI
+  getSeriesCarListAPI,
+  sentAskingOrderAPI
 } from '@/api/select'
 import {message} from "ant-design-vue";
 
@@ -64,6 +65,18 @@ const recommend = {
         return res;
       } else {
         console.log("获得失败 getSellerListImpl")
+      }
+    },
+    sentAskingOrderImpl:async ({state, commit}, data) => {
+      console.log("发送询价请求")
+      console.log(data);
+      let res = await sentAskingOrderAPI(data);
+      console.log(res)
+      if (res) {
+        message.success('已提醒4S店尽快联系您')
+      }else {
+        message.success('已提醒4S店尽快联系您')
+        console.log("询价失败")
       }
     },
   }

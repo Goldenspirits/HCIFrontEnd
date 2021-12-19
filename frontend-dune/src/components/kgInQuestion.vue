@@ -31,9 +31,11 @@
             </div>
             <div  style="width: 100%;height: 40px">
               <label style="width:35%;margin-left: 20%">手机号码</label>
-              <a-input style="width: 54%;float: right;margin-right: 6%" placeholder="输入11位手机号" />
+
+              <a-input style="width: 54%;float: right;margin-right: 6%" placeholder="输入11位手机号"  v-model="phoneNum"/>
+
             </div>
-            <a-button  style="margin-top: 10px;width: 74%;height: 40px;background-color: #ffe100;border-color: #ffe100;color: #1a1a1a;border-radius: 5px;margin-left: 20%" type="primary">询底价</a-button>
+            <a-button  style="margin-top: 10px;width: 74%;height: 40px;background-color: #ffe100;border-color: #ffe100;color: #1a1a1a;border-radius: 5px;margin-left: 20%" type="primary"  @click="handleAskingPrice()">询底价</a-button>
           </div>
           <div class="ShopListHeader">
             <div style="display: flex;justify-content: space-around;width: 180px">
@@ -112,7 +114,7 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "kgInQuestion",
@@ -120,10 +122,16 @@ export default {
   props: [
     'imgAddress','carSeries','carSeriesId'
   ],
+  computed: {
+    ...mapGetters([
+      'userId',
+    ])
+  },
   data() {
     const self = this;
 
     return {
+      phoneNum:'',
       thisImgAddress:this.imgAddress,
       carSeriesName:this.carSeries,
       //carSeriesId空的？？操
@@ -179,7 +187,30 @@ export default {
     ...mapActions([
       'getSeriesCarListImpl',
       'getSellerListImpl',
+      'sentAskingOrderImpl'
     ]),
+    async handleAskingPrice(){
+      let phonenum= this.phoneNum;
+      console.log("得到电话号");
+      console.log(phonenum);
+      if(phonenum.length<13){
+        this.$message.error(
+          { content: "请正确输入手机号", duration: 1}
+        );
+        return;
+      }
+
+      let _this=this;
+      await this.sentAskingOrderImpl({
+        dealerId:_this.curSelectedShop.dealer_id,
+        dealerName:_this.curSelectedShop.dealer_name,
+        userId:_this.userId,
+        seriesId:parseInt(_this.thisCarSeriesId),
+        carId:_this.curCarId,
+        phone:phonenum
+      });
+
+    },
     selectShopHandler(item){
       this.curSelectedShop=item;
       this.center = [item.longi,item.lati]

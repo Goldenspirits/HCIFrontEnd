@@ -178,7 +178,7 @@
           {
             type: 1,
             key: 0,
-            message: "ask",
+            message: "能不能介绍一下奔驰E级？",
             from: 1,
             timestamp: new Date(),
             displayedTime: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
@@ -187,7 +187,19 @@
           {
             type: 1,
             key: 1,
-            message: "answer",
+            message: "以下是您所查找的车型介绍： " +"<br>"+
+              "=======================" +"<br>"+
+              "车型：奔驰E级" +"<br>"+
+              "品牌：奔驰" +"<br>"+
+              "类型：中大型车" +"<br>"+
+              "指导价格：43.08-64.28万" +"<br>"+
+              "驱动类型：" +"<br>"+
+              "能源类型：汽油" +"<br>"+
+              "变速箱类型：9挡手自一体" +"<br>"+
+              "(电动车)充电时间：-" +"<br>"+
+              "(电动车)续航时间：-" +"<br>"+
+              "(油车)排量：1.5T 2.0T" +"<br>"+
+              "综合评分：4.773087071240106''" ,
             from: 2,
             timestamp: new Date(),
             displayedTime: '',

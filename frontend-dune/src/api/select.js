@@ -31,4 +31,12 @@ export function getSellerListAPI(data) {
     data
   })
 }
+export function sentAskingOrderAPI(data) {
+  return axios({
+    url: `${api.selectPre}/series/seller/query_price`,
+    method: 'post',
+    data
+  })
+}
+
 
