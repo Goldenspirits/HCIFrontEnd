@@ -25,7 +25,8 @@
                 :visible="graphVisible"
                 @close="onCloseGraph"
               >
-                  <KG_Q style="margin: auto;" :graphData="graphData"></KG_Q>
+                  <KG_Q style="margin: auto;" :imgAddress="this.car.coverImg" :carSeriesId="this.car.seriesId" :carSeries="this.car.name"></KG_Q>
+<!--                :baseCarInfo="{imgAddress:this.car.coverImg,carSeries:this.car.name,carSeriesId:this.car.seriesId}"-->
               </a-drawer>
             </div>
           </div>
@@ -80,7 +81,7 @@
         g6Spinning: false,
         drawerTitle: '',
         graphVisible: false,
-        selector: {}
+        selector: {},
       };
     },
     async mounted() {
@@ -118,9 +119,9 @@
         }
       },
 
-      async showG(id) {
-        this.g6Spinning = true;
-        this.graphData = await this.getCarGraph(id);
+      showG(id) {
+        // this.g6Spinning = true;
+        // this.graphData =  this.getCarGraph(id);
         this.graphVisible = true;
         this.g6Spinning = false;
         let _this = this;
@@ -130,6 +131,17 @@
           behaviorType: 0,
         };
         this.sendUserBehaviorInfo(data);
+
+      // 构造需要的内容
+
+        this.selectedCar={
+          imgAddress:_this.car.coverImg,
+          carSeries:_this.car.name,
+          carSeriesId:_this.car.seriesId
+        }
+        console.log("车辆信息")
+        console.log(this.selectedCar);
+
       },
       onCloseGraph() {
         this.graphVisible = false

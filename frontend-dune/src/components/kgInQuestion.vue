@@ -7,15 +7,15 @@
             <div class="carbar" style="width: 100%;height: 100px">
 
                 <div class="carImgContainer" style="width: 35%;height: 80px">
-                  <img class="carImg" :src="imgAddress" >
+                  <img class="carImg" :src="thisImgAddress" >
                 </div>
                 <div class="carType"  style="width: 60%;height: 80px">
                   <div class="carSeries" style="width: 90%;font-size: 24px;font-weight: 300;color: #1A1A1A" >
-                    {{carSeries}}
+                    {{carSeriesName}}
                   </div>
-                  <a-select dropdownMatchSelectWidth="true"  default-value="lucy" style="width: 90%;margin-top: 10px" @change="handleChange">
-                    <a-select-option v-for="carid in carTypeIds" :key="carid" :value="carid">
-                      {{ carid }}
+                  <a-select :dropdownMatchSelectWidth="true"  :default-value="this.carTypes[0].name" style="width: 90%;margin-top: 10px" @change="handleChangeCar">
+                    <a-select-option v-for="item in carTypes" :key="item.car_id" :value="item.car_id" >
+                      {{ item.name+' '+item.year+"款" }}
                     </a-select-option>
                   </a-select>
                 </div>
@@ -23,9 +23,9 @@
             </div>
             <div  style="width: 100%;height: 40px">
                 <label style="width:35%;margin-left: 20%">选择城市</label>
-                <a-select dropdownMatchSelectWidth="true"  default-value="lucy" style="width: 54%;float: right;margin-right: 6%" @change="handleChange">
-                  <a-select-option v-for="carid in carTypeIds" :key="carid" :value="carid">
-                    {{ carid }}
+                <a-select :dropdownMatchSelectWidth="true"  default-value="南京" style="width: 54%;float: right;margin-right: 6%" @change="handleChangeCity">
+                  <a-select-option v-for="city in cityList" :key="city" :value="city">
+                    {{ city }}
                   </a-select-option>
                 </a-select>
             </div>
@@ -40,24 +40,26 @@
               <div style="width: 60px; font-size: 14px;color: #1A1A1A">经销商</div>
               <div style="width: 90px;font-size: 14px;color:#A2A4AB" >选择经销商</div>
             </div>
-            <div style="width: 80px;margin-right: 20px;font-size: 14px;color:#FCA91F">智能推荐</div>
+            <div style="display: flex;justify-content: space-between;width: 230px">
+              <div style="width: 100px; font-size: 14px;color: #FA7973">{{ curSelectedShop.dealer_name }}</div>
+              <div style="width: 80px;margin-right: 10px;font-size: 14px;color:#FCA91F">智能推荐</div>
+            </div>
           </div>
           <a-divider class="mydivi" style="margin:12px 0;min-width: 95%;width: 95%"></a-divider>
-          <div class="ShopList">
-<!--            @click="goQuestionPage(item.question)"-->
-            <div class="shopCard" v-for="item in shopList"
-                 :key="item.id" >
-              <p class="shopName">{{item.name}}<span class="salePlace">{{item.saleplace}}</span></p>
-              <p class="priceC">经销商报价: <span class="price">{{item.price}}</span></p>
-              <p class="shopPlaceC">{{item.place}}</p>
-              <p class="shopPhoneC">经销商电话: <span class="shopPhone">{{item.phoneNum}}</span></p>
+          <div class="ShopList"  >
+            <div class="shopCard" v-for="item in shopDetails"
+                 :key="item.dealer_id" @click="selectShopHandler(item)" >
+              <p class="shopName" style="font-size: 16px">{{item.dealer_name}}
+                <span class="sale_region" style="font-size: 14px;rgb(153, 153, 153);margin-left: 8px;">{{item.sale_region}}</span></p>
+              <p class="priceC" style="font-size: 14px;color: rgb(153, 153, 153);">经销商报价:
+                <span class="price" style="color: rgb(255, 145, 0);font-size: 18px;font-weight: 500;">{{item.dealer_price+"万"}}</span></p>
+              <p class="shopPlaceC" style="font-size: 14px;color: rgb(102, 102, 102);">{{item.address}}</p>
+              <p class="shopPhoneC" style="color: rgb(153, 153, 153);font-size: 14px;">经销商电话:
+                <span class="dealer_phone" style="color: rgb(255, 145, 0);font-weight: 500;font-size: 16px;">{{item.dealer_phone}}</span></p>
               <a-divider style="margin:12px 0;min-width: 90%;width: 90%"></a-divider>
             </div>
           </div>
         </div>
-        <a-button type="primary" @click="changePos">
-          按钮
-        </a-button>
         <a-button type="primary" @click="centPost">
           测试函数
         </a-button>
@@ -68,13 +70,13 @@
             <el-amap vid="amap" class="amap-demo"
                      :center="center" :zoom="zoom" :resize-enable="true">
               <el-amap-marker
-                v-for="(detail, index) in details"
+                v-for="(detail, index) in shopDetails"
                 :key="'marker' + index"
                 :position="[detail.longi, detail.lati]"
               >
               </el-amap-marker>
               <el-amap-text
-                v-for="(detail, index) in details"
+                v-for="(detail, index) in shopDetails"
                 :key="'text' + index"
                 :text="detail.dealer_name"
                 :offset="[0,30]"
@@ -84,21 +86,21 @@
           </div>
         </a-row>
         <a-row>
-          <a-card :title="details[currentPos].dealer_full_name" class="desc-card" bodyStyle="margin:12px 24px;padding:0;">
+          <a-card :title="curSelectedShop.dealer_full_name" class="desc-card" :bodyStyle="bdstyle">
             <p>
               <a-icon type="environment" />
-              {{ details[currentPos].address }}
+              {{ curSelectedShop.address }}
             </p>
             <p>
               <a-icon type="pay-circle" />
               <span class="dealer-price">
-                {{ details[currentPos].dealer_price }}
+                {{ curSelectedShop.dealer_price }}
               </span>
-              万元（{{ details[currentPos].sale_region }}）
+              万元（{{ curSelectedShop.sale_region }}）
             </p>
             <p>
               <a-icon type="phone" />
-              {{ details[currentPos].dealer_phone }}
+              {{ curSelectedShop.dealer_phone }}
             </p>
           </a-card>
         </a-row>
@@ -114,21 +116,29 @@ import {mapActions} from "vuex";
 
 export default {
   name: "kgInQuestion",
-  props: {
-    graphData: Object
-  },
+  //todo 传递的应该是car 的基础信息，包含 seriesId，车系名字，以及汽车图片
+  props: [
+    'imgAddress','carSeries','carSeriesId'
+  ],
   data() {
     const self = this;
+
     return {
+      thisImgAddress:this.imgAddress,
+      carSeriesName:this.carSeries,
+      //carSeriesId空的？？操
+      thisCarSeriesId:this.carSeriesId,
+      bdstyle:{"margin":"12px 24px","font-padding": "0","padding":"0"},
       center: [118.854, 31.931],
       lng: 118.854,
       lat: 31.931,
       loaded: false,
       zoom: 16,
-      imgAddress:"http://p1-dcd.byteimg.com/img/motor-img/83746b2d09028177794c863d079fe229~tplv-resize:960:0.jpg",
-      carTypeIds:["车型0001","车型0002","车型0003","车型0004"],
-      shopList:[{}],
-      carSeries:"奥迪A4L",
+      carTypes:[],
+      curCity:"南京",
+      curCarId:0,
+      cityList:["南京","上海","北京","深圳","广州"],
+      curSelectedShop:{dealer_name:"江宁宏图"},
       markers: [
         {
           position: [118.854, 31.931],
@@ -146,50 +156,73 @@ export default {
           offset: [0, 30]
         }
       ],
-      currentPos: 0,
-      details: [
-        {
-          "dealer_id": "dcd_1463",
-          "lati": 31.988229,
-          "longi": 118.884544,
-          "address": "南京市江宁东山汽车园临麒路19号",
-          "dealer_name": "南京聚亚",
-          "dealer_full_name": "南京聚亚汽车销售服务有限责任公司",
-          "dealer_phone": "17186239533",
-          "sale_region": "售本市",
-          "dealer_price": 18.08,
-          "official_price": 18.08
-        },
-        {
-          "dealer_id": "dcd_19423",
-          "lati": 31.931847,
-          "longi": 118.854238,
-          "address": "江宁区科苑路43号",
-          "dealer_name": "南京通华（江宁店）",
-          "dealer_full_name": "南京通华汽车销售有限公司",
-          "dealer_phone": "17092502674",
-          "sale_region": "售多地",
-          "dealer_price": 18.08,
-          "official_price": 18.08
-        }
-      ]
+      shopDetails: []
     }
   },
-  mounted() {
-    this.center = [this.details[this.currentPos].longi, this.details[this.currentPos].lati]
+  async mounted() {
+
+    this.carTypes= await this.getSeriesCarListImpl(this.thisCarSeriesId);
+
+    //获取默认的
+    let _this=this;
+    this.curCarId=this.carTypes[0].car_id;
+    this.shopDetails= await this.getSellerListImpl({
+      seriesId:_this.thisCarSeriesId,
+      carId:_this.curCarId,
+      city:_this.curCity
+    })
+    this.curSelectedShop=this.shopDetails[0];
+    console.log(this.curSelectedShop)
+    this.center = [this.shopDetails[0].longi, this.shopDetails[0].lati]
   },
   methods: {
     ...mapActions([
       'getSeriesCarListImpl',
       'getSellerListImpl',
     ]),
-    changePos() {
-      this.currentPos = (this.currentPos + 1) % this.details.length;
-      this.center = [this.details[this.currentPos].longi, this.details[this.currentPos].lati]
+    selectShopHandler(item){
+      this.curSelectedShop=item;
+      this.center = [item.longi,item.lati]
       console.log(this.center);
     },
+    async handleChangeCar(value){
+      console.log("改变了车辆 id：")
+      console.log(value)
+      this.curCarId=value;
+
+      let _this=this;
+      this.shopDetails= await this.getSellerListImpl({
+        seriesId:_this.thisCarSeriesId,
+        carId:_this.curCarId,
+        city:_this.curCity
+      })
+      this.curSelectedShop=this.shopDetails[0];
+      console.log(this.curSelectedShop)
+      this.center = [this.shopDetails[0].longi, this.shopDetails[0].lati]
+    },
+    async handleChangeCity(value){
+      console.log("改变了城市 ")
+      console.log(value)
+      this.curCity=value;
+
+      let _this=this;
+      this.shopDetails= await this.getSellerListImpl({
+        seriesId:_this.thisCarSeriesId,
+        carId:_this.curCarId,
+        city:_this.curCity
+      })
+      this.curSelectedShop=this.shopDetails[0];
+      console.log(this.curSelectedShop)
+      this.center = [this.shopDetails[0].longi, this.shopDetails[0].lati]
+    },
     async centPost(){
-      let res= await this.getSeriesCarListImpl(1014);
+      let data={
+        seriesId:1014,
+        carId:52547,
+        city:"南京"
+      }
+      // let res= await this.getSeriesCarListImpl(1014);
+      let res= await this.getSellerListImpl(data);
       console.log(res);
     }
   },
