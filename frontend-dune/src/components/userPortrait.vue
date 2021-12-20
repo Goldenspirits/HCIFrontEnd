@@ -15,7 +15,8 @@
               <a slot="actions"
                  style="color: #a51f1f;margin-right: 2em"
                  @click="cancelBooking(item.carSeriesEntity.seriesId)"
-              ><a-icon type="star" style="color: #a51f1f;"/>
+              >
+                <a-icon type="star" style="color: #a51f1f;"/>
                 取消收藏</a>
 
               <a-list-item-meta
@@ -26,13 +27,27 @@
                   style="width: 3.5em;height: 3.5em;margin: .5em .5em 0 1.5em"
                   slot="avatar"
                   :src="item.carSeriesEntity.coverImg"
+                  @click="showG(item.carSeriesEntity)"
                 />
               </a-list-item-meta>
             </a-list-item>
           </a-list>
         </div>
       </div>
-
+      <a-drawer
+        :title="drawerTitle"
+        width="1000px"
+        placement="left"
+        :closable="true"
+        :visible="graphVisible"
+        @close="onCloseGraph"
+      >
+        <KG_Q
+          style="margin: auto;"
+          :imgAddress="selectedCar.imgAddress"
+          :carSeriesId="selectedCar.carSeriesId"
+          :carSeries="selectedCar.carSeries"></KG_Q>
+      </a-drawer>
       <MyWordCloud style="background-color: rgba(245, 248, 252, 0.9);margin-left: 4vw;width: 60vw;height:  83.1vh">
       </MyWordCloud>
     </div>
@@ -43,6 +58,7 @@
 <script>
 // import KG from './knowledgeGraph'
 const KG = () => import('./knowledgeGraph');
+const KG_Q = () => import('./kgInQuestion')
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 
 const MyWordCloud = () => import("./myWordCloud");
@@ -53,13 +69,20 @@ export default {
     return {
       // graph:{}
       bookList: [],
-      fetchingBookList: false
+      fetchingBookList: false,
+      drawerTitle: '',
+      graphVisible: false,
+      selectedCar: {
+        imgAddress: '',
+        carSeries: '',
+        carSeriesId: ''
+      }
 
     }
   },
   components: {
     KG,
-    MyWordCloud
+    MyWordCloud, KG_Q
   },
 
   computed: {
@@ -92,6 +115,24 @@ export default {
       await this.cancelUserBook({userId: this.userId, carId: e})
       this.bookList = await this.getUserBook(this.userId)
     },
+    async showG(item) {
+      this.graphVisible = true;
+      this.g6Spinning = false;
+
+      // 构造需要的内容
+
+      this.selectedCar = {
+        imgAddress: item.coverImg,
+        carSeries: item.name,
+        carSeriesId: item.seriesId
+      }
+      console.log(this.selectedCar)
+
+
+    },
+    onCloseGraph() {
+      this.graphVisible = false
+    }
 
   }
 }
@@ -116,10 +157,12 @@ export default {
   background-position: 0 0;
   background-size: 100% 100%;
 }
-.MyContainer{
+
+.MyContainer {
   display: flex;
   align-items: center;
 }
+
 .block1 {
   height: 52vh;
   /*box-shadow: 0 0px 4px rgba(0,0,0, 0.8);*/
@@ -145,9 +188,10 @@ export default {
   padding: 20px;
   width: 100%;
 }
-#bookItem{
+
+#bookItem {
   margin: 4px;
-  box-shadow: 0 2px 2px rgba(0,0,0, 0.4);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
   text-align: left;
 }
 
