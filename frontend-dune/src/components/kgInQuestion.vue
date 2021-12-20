@@ -62,9 +62,7 @@
             </div>
           </div>
         </div>
-        <a-button type="primary" @click="centPost">
-          测试函数
-        </a-button>
+       
       </a-col>
       <a-col :span="12">
         <a-row>

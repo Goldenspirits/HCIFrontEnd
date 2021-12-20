@@ -15,7 +15,7 @@
               <a-spin :spinning="g6Spinning">
               </a-spin>
               <a-button value="small" class="relevant" icon="share-alt" @click="showG(car.seriesId)">
-                查看图谱
+                询底价
               </a-button>
               <a-drawer
                 :title="drawerTitle"
