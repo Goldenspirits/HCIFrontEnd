@@ -71,11 +71,12 @@ const recommend = {
       console.log("发送询价请求")
       console.log(data);
       let res = await sentAskingOrderAPI(data);
+      console.log("得到询价结果")
       console.log(res)
       if (res) {
         message.success('已提醒4S店尽快联系您')
       }else {
-        message.success('已提醒4S店尽快联系您')
+        message.error('请输入正确的手机号')
         console.log("询价失败")
       }
     },

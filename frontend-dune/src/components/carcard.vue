@@ -24,7 +24,7 @@
               :visible="graphVisible"
               @close="onCloseGraph"
             >
-              <KG_Q style="margin: auto;background-color: #edeef2" :graphData="graphData"></KG_Q>
+              <KG_Q style="margin: auto;" :imgAddress="this.car.coverImg" :carSeriesId="this.car.seriesId" :carSeries="this.car.name"></KG_Q>
             </a-drawer>
           </div>
       </div>
@@ -118,18 +118,25 @@
 
       async showG(id) {
         this.graphVisible = true;
-        this.g6Spinning = true;
-        this.graphData = await this.getCarGraph(id);
         this.g6Spinning = false;
-        let _this=this;
-        let _seriesId = _this.car.seriesId;
-        console.log(_seriesId);
+        let _this = this;
         let data = {
           userid: this.userId,
           carid: _this.car.seriesId,
           behaviorType: 0,
         };
-        // this.sendUserBehaviorInfo(data);
+        this.sendUserBehaviorInfo(data);
+
+        // 构造需要的内容
+
+        this.selectedCar={
+          imgAddress:_this.car.coverImg,
+          carSeries:_this.car.name,
+          carSeriesId:_this.car.seriesId
+        }
+        console.log("车辆信息")
+        console.log(this.selectedCar);
+
 
       },
       onCloseGraph() {

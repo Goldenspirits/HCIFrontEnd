@@ -168,6 +168,13 @@ export default {
     }
   },
   async mounted() {
+    console.log("挂载前 桩检查：")
+    console.log("thisCarSeriesId: "+this.thisCarSeriesId);
+    console.log("thisImgAddress: "+this.thisImgAddress);
+    console.log("carSeriesName: "+this.carSeriesName);
+
+
+
 
     this.carTypes= await this.getSeriesCarListImpl(this.thisCarSeriesId);
 
@@ -193,7 +200,7 @@ export default {
       let phonenum= this.phoneNum;
       console.log("得到电话号");
       console.log(phonenum);
-      if(phonenum.length<13){
+      if(phonenum.length<11){
         this.$message.error(
           { content: "请正确输入手机号", duration: 1}
         );
@@ -201,6 +208,9 @@ export default {
       }
 
       let _this=this;
+      //todo 这里后端好像有点问题，，不管了
+      //TODO 修改推荐页的car
+
       await this.sentAskingOrderImpl({
         dealerId:_this.curSelectedShop.dealer_id,
         dealerName:_this.curSelectedShop.dealer_name,
